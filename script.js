@@ -19,13 +19,14 @@ $(".description").each(function () {
     }
 })
 
-var storedTasks = {}
+var storedTasks = JSON.parse(localStorage.getItem('stored-tasks')) || []
+
 function save() {
-    console.log('')
     var textInput = $(this).siblings("input")
     var newTask = textInput.val()
     var hour = textInput.attr('name')
-    storedTasks[hour] = newTask
+    var newObj = {hour,newTask}
+    storedTasks.push(newObj)
     localStorage.setItem('stored-tasks',JSON.stringify(storedTasks))
     console.log(storedTasks)
 }
@@ -35,14 +36,18 @@ $(".saveBtn").each(function() {
 })
 
 function init() {
-    var retrievedTasks = JSON.parse(localStorage.getItem('stored-tasks'))
-    console.log(retrievedTasks)
+    console.log(storedTasks)
     $(".description").each(function() {
         var hour = $(this).attr('name')
-        if (hour == retrievedTasks.hour) {
-            console.log($(this).val())
+        if (storedTasks.length != null) {//fix thiiiiis
+            for (let i = 0; i < storedTasks.length; i++) {
+                if (hour == storedTasks[i].hour) {
+                    console.log($(this).val())
+                    $(this).val(storedTasks[i].newTask)
+                }
+                console.log(hour)
+            }
         }
-        console.log(hour)
     })
 }
 
